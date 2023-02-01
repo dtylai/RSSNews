@@ -16,6 +16,8 @@
 		948559E7298B02B700556814 /* RSSNewsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948559E6298B02B700556814 /* RSSNewsTests.swift */; };
 		948559F1298B02B700556814 /* RSSNewsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948559F0298B02B700556814 /* RSSNewsUITests.swift */; };
 		948559F3298B02B700556814 /* RSSNewsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948559F2298B02B700556814 /* RSSNewsUITestsLaunchTests.swift */; };
+		94855A01298B030600556814 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 94855A00298B030600556814 /* Kingfisher */; };
+		94855A04298B031300556814 /* FeedKit in Frameworks */ = {isa = PBXBuildFile; productRef = 94855A03298B031300556814 /* FeedKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +58,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94855A01298B030600556814 /* Kingfisher in Frameworks */,
+				94855A04298B031300556814 /* FeedKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +147,10 @@
 			dependencies = (
 			);
 			name = RSSNews;
+			packageProductDependencies = (
+				94855A00298B030600556814 /* Kingfisher */,
+				94855A03298B031300556814 /* FeedKit */,
+			);
 			productName = RSSNews;
 			productReference = 948559CC298B02B300556814 /* RSSNews.app */;
 			productType = "com.apple.product-type.application";
@@ -215,6 +223,10 @@
 				Base,
 			);
 			mainGroup = 948559C3298B02B300556814;
+			packageReferences = (
+				948559FF298B030600556814 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				94855A02298B031300556814 /* XCRemoteSwiftPackageReference "FeedKit" */,
+			);
 			productRefGroup = 948559CD298B02B300556814 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -602,6 +614,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		948559FF298B030600556814 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		94855A02298B031300556814 /* XCRemoteSwiftPackageReference "FeedKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nmdias/FeedKit";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		94855A00298B030600556814 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 948559FF298B030600556814 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		94855A03298B031300556814 /* FeedKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 94855A02298B031300556814 /* XCRemoteSwiftPackageReference "FeedKit" */;
+			productName = FeedKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 948559C4298B02B300556814 /* Project object */;
 }
