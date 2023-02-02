@@ -101,11 +101,11 @@ class FeedItemCell: UITableViewCell {
         } else {
             dateLabel.text = dateFormatter.string(from: date )
         }
-    
+        
         let url = URL(string: article.imageURL ?? " ")
-        articleImageView.image = article.image
+        articleImageView.kf.indicatorType = .activity
         articleImageView.kf.setImage(with: url)
-
+        
         if article.isRead {
             self.backgroundColor = .gray.withAlphaComponent(0.2)
         }

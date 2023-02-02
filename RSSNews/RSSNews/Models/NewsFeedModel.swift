@@ -7,24 +7,28 @@
 
 import UIKit
 import FeedKit
-import Kingfisher
 
 class NewsFeedModel{
-    var feedItems = [RSSFeedItem]()
     var news = [News]()
-    var realmNews = [NewsArticle]()
     
     let resource = URL(string: Resources.lentaRu.rawValue)!
     
     func loadFeedItems(completion: @escaping(_ error: Error?) -> Void) {
         let parser = FeedParser(URL: resource)
+        
         parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { [weak self] (result) in
             switch result {
             case .success(let feed):
-                self?.feedItems = feed.rssFeed?.items ?? []
-                self?.news = self?.convertRSStoNews(rssNews: self?.feedItems ?? []) ?? []
-                RealmManager.shared.saveNewsArticle(feed.rssFeed?.items ?? [])
-                //self?.news = self?.convertRealmtoNews(realmNews: RealmManager.shared.retrieveNewsArticles()) ?? []
+                let rssNews = feed.rssFeed?.items ?? []
+                let newNews = self?.convertRSStoNews(rssNews: rssNews) ?? []
+                
+                self?.news.append(contentsOf: newNews.filter({ news in
+                    !(self?.news.contains(where: { existingNews in
+                        news.title == existingNews.title && news.date == existingNews.date
+                    }))!
+                }))
+                
+                RealmManager.shared.saveNewsArticle(articles: rssNews)
                 completion(nil)
             case .failure(let error):
                 completion(error)
@@ -32,8 +36,13 @@ class NewsFeedModel{
         }
     }
     
+    func loadFromRealm(completion: @escaping() -> Void) {
+        self.news = self.convertRealmtoNews(realmNews: RealmManager.shared.retrieveNewsArticles())
+        completion()
+    }
+    
     func convertRealmtoNews(realmNews: [NewsArticle]) -> [News] {
-       return realmNews.map({ article in
+        return realmNews.map({ article in
             return News(realmitem: article)
         })
     }

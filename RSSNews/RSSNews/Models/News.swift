@@ -13,7 +13,6 @@ struct News {
     var date: Date
     var articleDescription: String
     var imageURL: String?
-    var image: UIImage?
     var isRead: Bool
     
     init(rssItem: RSSFeedItem) {

@@ -22,12 +22,14 @@ class RealmManager {
         }
     }
     
-    func saveNewsArticle(_ articles: [RSSFeedItem]) {
+    func saveNewsArticle(articles: [RSSFeedItem]) {
         DispatchQueue.global(qos: .background).async {
             let realm = try! Realm()
+            
             for item in articles {
                 do {
                     let newsArticle = NewsArticle()
+                    
                     newsArticle.title = item.title!
                     newsArticle.date = item.pubDate!
                     newsArticle.articleDescription = item.description!
@@ -37,6 +39,7 @@ class RealmManager {
                     }
                     
                     let predicate = NSPredicate(format: "title == %@ && date == %@", newsArticle.title, newsArticle.date as NSDate)
+                    
                     if realm.objects(NewsArticle.self).filter(predicate).count == 0 {
                         try realm.write {
                             realm.add(newsArticle)
@@ -48,13 +51,15 @@ class RealmManager {
             }
         }
     }
-
+    
     func retrieveNewsArticles() -> [NewsArticle] {
         let articles = realm.objects(NewsArticle.self)
         var result = [NewsArticle]()
+        
         for article in articles {
             result.append(article)
         }
+        
         return result
     }
     
@@ -67,9 +72,11 @@ class RealmManager {
             print("Error deleting all articles: \(error)")
         }
     }
+    
     func findNewsArticle(withTitle title: String, andDate date: Date) -> NewsArticle? {
         let predicate = NSPredicate(format: "title == %@ && date == %@", title, date as NSDate)
         let articles = realm.objects(NewsArticle.self).filter(predicate)
+        
         return articles.first
     }
     

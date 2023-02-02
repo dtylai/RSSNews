@@ -11,7 +11,7 @@ class NewsFeedViewController: UIViewController {
     var newsFeedModel = NewsFeedModel()
     
     let myRefreshControl: UIRefreshControl = {
-       let refreshControl = UIRefreshControl()
+        let refreshControl = UIRefreshControl()
         let title = NSLocalizedString("Wait a second", comment: "Pull to refresh")
         refreshControl.attributedTitle = NSAttributedString(string: title)
         refreshControl.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
@@ -23,6 +23,11 @@ class NewsFeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
+        newsFeedModel.loadFromRealm {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
         loadNews()
     }
     
@@ -39,6 +44,7 @@ class NewsFeedViewController: UIViewController {
                 print("Failed to parse RSS feed: \(error)")
             }
             DispatchQueue.main.async {
+                
                 self.tableView.reloadData()
                 self.tableView.refreshControl?.endRefreshing()
             }
