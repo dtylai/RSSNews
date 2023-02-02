@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FeedKit
 
 class NewsFeedViewController: UIViewController {
     var newsFeedModel = NewsFeedModel()
@@ -24,7 +25,7 @@ class NewsFeedViewController: UIViewController {
     }
     
     func loadNews() {
-        newsFeedModel.loadFeedItems(from: URL(string: "https://lenta.ru/rss")!) { error in
+        newsFeedModel.loadFeedItems() { error in
             if let error = error {
                 print("Failed to parse RSS feed: \(error)")
             }
@@ -32,6 +33,13 @@ class NewsFeedViewController: UIViewController {
                 self.tableView.reloadData()
             }
         }
+    }
+    
+    func showDetailScreen(for item: RSSFeedItem) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let detailVC = storyboard.instantiateViewController(withIdentifier: "FeedItemDetailViewController") as! FeedItemDetailViewController
+        detailVC.item = item
+        navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
@@ -50,4 +58,9 @@ extension NewsFeedViewController: UITableViewDataSource {
     }
 }
 extension NewsFeedViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let item = newsFeedModel.feedItems[indexPath.row]
+        showDetailScreen(for: item)
+    }
 }
+

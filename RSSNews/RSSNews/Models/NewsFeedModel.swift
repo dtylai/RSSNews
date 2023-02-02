@@ -11,16 +11,17 @@ import FeedKit
 class NewsFeedModel{
     var feedItems = [RSSFeedItem]()
     
-    func loadFeedItems(from url: URL, completion: @escaping(_ error: Error?) -> Void) {
-        let parser = FeedParser(URL: url)
-        parser.parseAsync { result in
+    let resource = URL(string: Resources.lentaRu.rawValue)!
+    
+    func loadFeedItems(completion: @escaping(_ error: Error?) -> Void) {
+        let parser = FeedParser(URL: resource)
+        parser.parseAsync(queue: DispatchQueue.global(qos: .userInitiated)) { [weak self] (result) in
             switch result {
             case .success(let feed):
-                self.feedItems = feed.rssFeed?.items ?? []
+                self?.feedItems = feed.rssFeed?.items ?? []
                 completion(nil)
             case .failure(let error):
                 completion(error)
-               // print("Failed to parse RSS feed: \(error)")
             }
         }
     }
@@ -35,3 +36,5 @@ class NewsFeedModel{
         return rowHeight
     }
 }
+
+
