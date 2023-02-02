@@ -6,11 +6,8 @@
 //
 
 import UIKit
-import FeedKit
-import Kingfisher
 
 class FeedItemCell: UITableViewCell {
-    
     static let reuseIdentifier = "FeedItemCell"
     
     private let titleLabel: UILabel = {
@@ -43,6 +40,12 @@ class FeedItemCell: UITableViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         return imageView
+    }()
+    
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -82,18 +85,13 @@ class FeedItemCell: UITableViewCell {
             dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
     }
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter
-    }()
     
-    func configure(with article: RSSFeedItem) {
+    func configure(with article: News) {
         titleLabel.text = article.title
         
-        let date = article.pubDate
+        let date = article.date
         let now = Date()
-        let components = Calendar.current.dateComponents([.hour, .minute], from: date ?? Date(), to: now)
+        let components = Calendar.current.dateComponents([.hour, .minute], from: date , to: now)
         
         if let hours = components.hour, hours < 1 {
             let minutes = components.minute ?? 0
@@ -101,12 +99,10 @@ class FeedItemCell: UITableViewCell {
         } else if let hours = components.hour, hours < 24 {
             dateLabel.text = "\(hours) hours ago"
         } else {
-            dateLabel.text = dateFormatter.string(from: date ?? Date())
+            dateLabel.text = dateFormatter.string(from: date )
         }
-        
-        if let enclosure = article.enclosure, let imageURL = URL(string: enclosure.attributes?.url ?? "") {
-            articleImageView.kf.setImage(with: imageURL)
-        }
+    
+        articleImageView.image = article.image
     }
 }
 

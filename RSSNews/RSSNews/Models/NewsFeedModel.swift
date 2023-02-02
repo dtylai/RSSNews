@@ -5,11 +5,14 @@
 //  Created by Tulai Dima on 1.02.23.
 //
 
-import Foundation
+import UIKit
 import FeedKit
+import Kingfisher
 
 class NewsFeedModel{
     var feedItems = [RSSFeedItem]()
+    var news = [News]()
+    var realmNews = [NewsArticle]()
     
     let resource = URL(string: Resources.lentaRu.rawValue)!
     
@@ -19,12 +22,33 @@ class NewsFeedModel{
             switch result {
             case .success(let feed):
                 self?.feedItems = feed.rssFeed?.items ?? []
+                self?.news = self?.feedItems.map({ item in
+                    return self?.rSSFeedItemToNews(item)
+                }) as! [News]
                 RealmManager.shared.saveNewsArticle(feed.rssFeed?.items ?? [])
                 completion(nil)
             case .failure(let error):
                 completion(error)
             }
         }
+    }
+    
+    func convNew() {
+        realmNews = RealmManager.shared.retrieveNewsArticles()
+        for item in realmNews {
+            news.append(self.newsArticleToNews(item))
+        }
+    }
+    
+    func rSSFeedItemToNews(_ article: RSSFeedItem) -> News {
+        if let enclosure = article.enclosure, let imageURL = URL(string: enclosure.attributes?.url ?? "") {
+            let image = try! UIImage(data: Data(contentsOf: imageURL))
+            return News(title: article.title!, date: article.pubDate!, articleDescription: article.description!, image: image!, isRead: false)
+        }
+        return News(title: article.title!, date: article.pubDate!, articleDescription: article.description!, image: nil, isRead: false)
+    }
+    func newsArticleToNews(_ article: NewsArticle) -> News{
+        return News(title: article.title, date: article.date, articleDescription: article.articleDescription, image: UIImage(data: article.imageData!)!, isRead: article.isRead)
     }
     
     func calculateRowHeight(from frameHeight: CGFloat) -> CGFloat {
@@ -37,5 +61,4 @@ class NewsFeedModel{
         return rowHeight
     }
 }
-
 

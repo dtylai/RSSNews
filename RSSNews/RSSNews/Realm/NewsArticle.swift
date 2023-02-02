@@ -9,6 +9,7 @@ import UIKit
 import RealmSwift
 
 class NewsArticle: Object {
+    @objc dynamic var id = UUID().uuidString
     @objc dynamic var title: String = ""
     @objc dynamic var date: Date = Date()
     @objc dynamic var articleDescription: String = ""
@@ -22,5 +23,8 @@ class NewsArticle: Object {
         self.articleDescription = articleDescription
         self.imageData = image?.pngData()
     }
+    override static func primaryKey() -> String? {
+            return "id"
+        }
 }
 

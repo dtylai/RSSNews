@@ -6,26 +6,23 @@
 //
 
 import UIKit
-import Kingfisher
-import FeedKit
 
 class FeedItemDetailViewController: UIViewController {
-    var item: RSSFeedItem!
+    var feedItemDetailModel: FeedItemDetailModel!
     
-    @IBOutlet weak var dateLable: UILabel!
-    @IBOutlet weak var descriptionTextView: UITextView!
-    @IBOutlet weak var titleLAble: UILabel!
-    @IBOutlet weak var imageOfNews: UIImageView!
+    @IBOutlet private var dateLable: UILabel!
+    @IBOutlet private var descriptionTextView: UITextView!
+    @IBOutlet private var titleLAble: UILabel!
+    @IBOutlet private var imageOfNews: UIImageView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        titleLAble.text = item.title
-        descriptionTextView.text = item.description
-        dateLable.text = item.pubDate?.description
-        
-        if let enclosure = item.enclosure, let imageURL = URL(string: enclosure.attributes?.url ?? "") {
-            imageOfNews.kf.setImage(with: imageURL)
-        }
+        configContentOfElements()
+    }
+    func configContentOfElements(){
+        titleLAble.text = feedItemDetailModel.item.title
+        descriptionTextView.text = feedItemDetailModel.item.articleDescription
+        dateLable.text = feedItemDetailModel.item.date.description
+        imageOfNews.image = feedItemDetailModel.item.image
     }
 }

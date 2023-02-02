@@ -11,6 +11,7 @@ import FeedKit
 
 class RealmManager {
     static let shared = RealmManager()
+    
     private init() {}
     
     var realm: Realm {
@@ -22,33 +23,40 @@ class RealmManager {
     }
     
     func saveNewsArticle(_ articles: [RSSFeedItem]) {
-          DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .background).async {
             let realm = try! Realm()
             for item in articles {
-              do {
-                let newsArticle = NewsArticle()
-                newsArticle.title = item.title!
-                newsArticle.date = item.pubDate!
-                newsArticle.articleDescription = item.description!
-      
-                if let enclosure = item.enclosure, let imageURL = URL(string: enclosure.attributes?.url ?? "") {
-                  let image = try! UIImage(data: Data(contentsOf: imageURL))
-                    newsArticle.imageData = image?.pngData()
+                do {
+                    let newsArticle = NewsArticle()
+                    newsArticle.title = item.title!
+                    newsArticle.date = item.pubDate!
+                    newsArticle.articleDescription = item.description!
+                    
+                    if let enclosure = item.enclosure, let imageURL = URL(string: enclosure.attributes?.url ?? "") {
+                        let image = try! UIImage(data: Data(contentsOf: imageURL))
+                        newsArticle.imageData = image?.pngData()
+                    }
+                    
+                    let predicate = NSPredicate(format: "title == %@ && date == %@", newsArticle.title, newsArticle.date as NSDate)
+                    if realm.objects(NewsArticle.self).filter(predicate).count == 0 {
+                        try realm.write {
+                            realm.add(newsArticle)
+                        }
+                    }
+                } catch let error as NSError {
+                    print("Error saving article: \(error)")
                 }
-      
-                try realm.write {
-                  realm.add(newsArticle)
-                }
-              } catch let error as NSError {
-                print("Error saving article: \(error)")
-              }
             }
-         
         }
     }
-    
-    func retrieveNewsArticles() -> Results<NewsArticle> {
-        return realm.objects(NewsArticle.self)
+
+    func retrieveNewsArticles() -> [NewsArticle] {
+        let articles = realm.objects(NewsArticle.self)
+        var result = [NewsArticle]()
+        for article in articles {
+            result.append(article)
+        }
+        return result
     }
     
     func deleteAllNewsArticles() {

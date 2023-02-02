@@ -6,17 +6,19 @@
 //
 
 import UIKit
-import FeedKit
 
 class NewsFeedViewController: UIViewController {
     var newsFeedModel = NewsFeedModel()
     
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet private var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
+        newsFeedModel.convNew()
+        print(newsFeedModel.news.count)
         loadNews()
+        print(newsFeedModel.news.count)
     }
     
     func configureTableView() {
@@ -29,28 +31,30 @@ class NewsFeedViewController: UIViewController {
             if let error = error {
                 print("Failed to parse RSS feed: \(error)")
             }
+            print("hi")
             DispatchQueue.main.async {
+                print("hii")
                 self.tableView.reloadData()
             }
         }
     }
     
-    func showDetailScreen(for item: RSSFeedItem) {
+    func showDetailScreen(for item: News) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let detailVC = storyboard.instantiateViewController(withIdentifier: "FeedItemDetailViewController") as! FeedItemDetailViewController
-        detailVC.item = item
+        detailVC.feedItemDetailModel = FeedItemDetailModel(item: item)
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
 extension NewsFeedViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return newsFeedModel.feedItems.count
+        return newsFeedModel.news.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FeedItemCell.reuseIdentifier, for: indexPath) as! FeedItemCell
-        let item = newsFeedModel.feedItems[indexPath.row]
+        let item = newsFeedModel.news[indexPath.row]
         
         cell.configure(with: item)
         
@@ -59,7 +63,7 @@ extension NewsFeedViewController: UITableViewDataSource {
 }
 extension NewsFeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let item = newsFeedModel.feedItems[indexPath.row]
+        let item = newsFeedModel.news[indexPath.row]
         showDetailScreen(for: item)
     }
 }
