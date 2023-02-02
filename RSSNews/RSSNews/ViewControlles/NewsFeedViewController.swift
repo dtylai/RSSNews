@@ -22,6 +22,7 @@ class NewsFeedViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        overrideUserInterfaceStyle = .light
         configureTableView()
         newsFeedModel.loadFromRealm {
             DispatchQueue.main.async {

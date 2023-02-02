@@ -25,6 +25,7 @@ class FeedItemDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        overrideUserInterfaceStyle = .light
         configureUIElements()
         configContentOfElements()
     }
@@ -98,6 +99,7 @@ class FeedItemDetailViewController: UIViewController {
     func configContentOfElements(){
         titleLabel.text = feedItemDetailModel.item.title
         descriptionLabel.text = feedItemDetailModel.item.articleDescription
+        
         let url = URL(string: feedItemDetailModel.item.imageURL ?? " ")
         newsImageView.kf.setImage(with: url)
         
