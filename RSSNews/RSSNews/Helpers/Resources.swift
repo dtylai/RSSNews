@@ -8,5 +8,5 @@
 import Foundation
 
 enum Resources: String {
-    case lentaRu = "https://lenta.ru/rss/last24"
+    case lentaRu = "https://lenta.ru/rss"
 }

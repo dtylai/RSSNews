@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class FeedItemDetailViewController: UIViewController {
     var feedItemDetailModel: FeedItemDetailModel!
@@ -97,7 +98,9 @@ class FeedItemDetailViewController: UIViewController {
     func configContentOfElements(){
         titleLabel.text = feedItemDetailModel.item.title
         descriptionLabel.text = feedItemDetailModel.item.articleDescription
-        newsImageView.image = feedItemDetailModel.item.image
+        let url = URL(string: feedItemDetailModel.item.imageURL ?? " ")
+        newsImageView.kf.setImage(with: url)
+        
         let date = feedItemDetailModel.item.date
         let now = Date()
         let components = Calendar.current.dateComponents([.hour, .minute], from: date , to: now)
@@ -110,6 +113,5 @@ class FeedItemDetailViewController: UIViewController {
         } else {
             dateLabel.text = dateFormatter.string(from: date )
         }
-        
     }
 }

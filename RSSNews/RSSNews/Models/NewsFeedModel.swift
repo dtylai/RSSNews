@@ -22,32 +22,26 @@ class NewsFeedModel{
             switch result {
             case .success(let feed):
                 self?.feedItems = feed.rssFeed?.items ?? []
-                RealmManager.shared.saveNewsArticle(feed.rssFeed?.items ?? []) 
-                    self?.convNew()
-                    completion(nil)
+                self?.news = self?.convertRSStoNews(rssNews: self?.feedItems ?? []) ?? []
+                RealmManager.shared.saveNewsArticle(feed.rssFeed?.items ?? [])
+                //self?.news = self?.convertRealmtoNews(realmNews: RealmManager.shared.retrieveNewsArticles()) ?? []
+                completion(nil)
             case .failure(let error):
                 completion(error)
             }
         }
     }
     
-    func convNew() {
-        realmNews = RealmManager.shared.retrieveNewsArticles()
-        news = realmNews.map({ article in
-            self.newsArticleToNews(article)
+    func convertRealmtoNews(realmNews: [NewsArticle]) -> [News] {
+       return realmNews.map({ article in
+            return News(realmitem: article)
         })
-        print(news.count)
     }
     
-    func rSSFeedItemToNews(_ article: RSSFeedItem) -> News {
-        if let enclosure = article.enclosure, let imageURL = URL(string: enclosure.attributes?.url ?? "") {
-            let image = try! UIImage(data: Data(contentsOf: imageURL))
-            return News(title: article.title!, date: article.pubDate!, articleDescription: article.description!, image: image!, isRead: false)
-        }
-        return News(title: article.title!, date: article.pubDate!, articleDescription: article.description!, image: nil, isRead: false)
-    }
-    func newsArticleToNews(_ article: NewsArticle) -> News{
-        return News(title: article.title, date: article.date, articleDescription: article.articleDescription, image: UIImage(data: article.imageData!)!, isRead: article.isRead)
+    func convertRSStoNews(rssNews: [RSSFeedItem]) -> [News] {
+        return rssNews.map({ item in
+            return News(rssItem: item)
+        })
     }
     
     func calculateRowHeight(from frameHeight: CGFloat) -> CGFloat {

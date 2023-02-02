@@ -13,15 +13,15 @@ class NewsArticle: Object {
     @objc dynamic var title: String = ""
     @objc dynamic var date: Date = Date()
     @objc dynamic var articleDescription: String = ""
-    @objc dynamic var imageData: Data?
+    @objc dynamic var imageURL: String = ""
     @objc dynamic var isRead: Bool = false
 
-    convenience init(title: String, date: Date, image: UIImage?, articleDescription: String) {
+    convenience init(title: String, date: Date, imageURL: String, articleDescription: String) {
         self.init()
         self.title = title
         self.date = date
         self.articleDescription = articleDescription
-        self.imageData = image?.pngData()
+        self.imageURL = imageURL
     }
     override static func primaryKey() -> String? {
             return "id"

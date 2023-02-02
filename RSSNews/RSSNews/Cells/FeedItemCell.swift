@@ -68,7 +68,6 @@ class FeedItemCell: UITableViewCell {
             articleImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             articleImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             articleImageView.widthAnchor.constraint(equalTo: articleImageView.heightAnchor),
-            articleImageView.heightAnchor.constraint(equalToConstant: 50)
         ])
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -103,8 +102,10 @@ class FeedItemCell: UITableViewCell {
             dateLabel.text = dateFormatter.string(from: date )
         }
     
+        let url = URL(string: article.imageURL ?? " ")
         articleImageView.image = article.image
-        
+        articleImageView.kf.setImage(with: url)
+
         if article.isRead {
             self.backgroundColor = .gray.withAlphaComponent(0.2)
         }

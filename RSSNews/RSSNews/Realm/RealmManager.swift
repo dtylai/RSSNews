@@ -32,9 +32,8 @@ class RealmManager {
                     newsArticle.date = item.pubDate!
                     newsArticle.articleDescription = item.description!
                     
-                    if let enclosure = item.enclosure, let imageURL = URL(string: enclosure.attributes?.url ?? "") {
-                        let image = try! UIImage(data: Data(contentsOf: imageURL))
-                        newsArticle.imageData = image?.pngData()
+                    if let enclosure = item.enclosure {
+                        newsArticle.imageURL = enclosure.attributes?.url ?? ""
                     }
                     
                     let predicate = NSPredicate(format: "title == %@ && date == %@", newsArticle.title, newsArticle.date as NSDate)

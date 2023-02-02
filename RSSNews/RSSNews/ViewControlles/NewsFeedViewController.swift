@@ -23,16 +23,14 @@ class NewsFeedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
-        newsFeedModel.convNew()
-        print(newsFeedModel.news.count)
         loadNews()
-        print(newsFeedModel.news.count)
     }
     
     func configureTableView() {
         tableView.rowHeight = newsFeedModel.calculateRowHeight(from: tableView.frame.size.height)
         tableView.register(FeedItemCell.self, forCellReuseIdentifier: FeedItemCell.reuseIdentifier)
         tableView.refreshControl = myRefreshControl
+        tableView.refreshControl?.beginRefreshing()
     }
     
     func loadNews() {
@@ -42,6 +40,7 @@ class NewsFeedViewController: UIViewController {
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
+                self.tableView.refreshControl?.endRefreshing()
             }
         }
     }
@@ -52,6 +51,7 @@ class NewsFeedViewController: UIViewController {
         detailVC.feedItemDetailModel = FeedItemDetailModel(item: item)
         navigationController?.pushViewController(detailVC, animated: true)
     }
+    
     @objc func refresh(sender: UIRefreshControl) {
         newsFeedModel.loadFeedItems() { error in
             if let error = error {
@@ -85,6 +85,9 @@ extension NewsFeedViewController: UITableViewDelegate {
         let item = newsFeedModel.news[indexPath.row]
         RealmManager.shared.markNewsArticleAsRead(withTitle: item.title, andDate: item.date)
         newsFeedModel.news[indexPath.row].isRead = true
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
         showDetailScreen(for: item)
     }
 }
