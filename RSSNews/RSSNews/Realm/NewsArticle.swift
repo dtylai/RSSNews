@@ -7,7 +7,6 @@
 
 import UIKit
 import RealmSwift
-import Kingfisher
 
 class NewsArticle: Object {
     @objc dynamic var title: String = ""

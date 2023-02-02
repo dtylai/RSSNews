@@ -8,7 +8,6 @@
 import UIKit
 import RealmSwift
 import FeedKit
-import Kingfisher
 
 class RealmManager {
     static let shared = RealmManager()
@@ -23,24 +22,28 @@ class RealmManager {
     }
     
     func saveNewsArticle(_ articles: [RSSFeedItem]) {
-        do {
-            try realm.write {
-                for item in articles {
-                    let newsArticle = NewsArticle()
-                    newsArticle.title = item.title!
-                    newsArticle.date = item.pubDate!
-                    newsArticle.articleDescription = item.description!
-                    
-                    if let enclosure = item.enclosure, let imageURL = URL(string: enclosure.attributes?.url ?? "") {
-                        let image = try UIImage(data: Data(contentsOf: imageURL))
-                        newsArticle.imageData = image?.pngData()
-                    }
-                    
-                    realm.add(newsArticle)
+          DispatchQueue.global(qos: .background).async {
+            let realm = try! Realm()
+            for item in articles {
+              do {
+                let newsArticle = NewsArticle()
+                newsArticle.title = item.title!
+                newsArticle.date = item.pubDate!
+                newsArticle.articleDescription = item.description!
+      
+                if let enclosure = item.enclosure, let imageURL = URL(string: enclosure.attributes?.url ?? "") {
+                  let image = try! UIImage(data: Data(contentsOf: imageURL))
+                    newsArticle.imageData = image?.pngData()
                 }
+      
+                try realm.write {
+                  realm.add(newsArticle)
+                }
+              } catch let error as NSError {
+                print("Error saving article: \(error)")
+              }
             }
-        } catch let error as NSError {
-            print("Error saving articles: \(error)")
+         
         }
     }
     
