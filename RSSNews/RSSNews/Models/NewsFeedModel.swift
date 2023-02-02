@@ -22,11 +22,9 @@ class NewsFeedModel{
             switch result {
             case .success(let feed):
                 self?.feedItems = feed.rssFeed?.items ?? []
-                self?.news = self?.feedItems.map({ item in
-                    return self?.rSSFeedItemToNews(item)
-                }) as! [News]
-                RealmManager.shared.saveNewsArticle(feed.rssFeed?.items ?? [])
-                completion(nil)
+                RealmManager.shared.saveNewsArticle(feed.rssFeed?.items ?? []) 
+                    self?.convNew()
+                    completion(nil)
             case .failure(let error):
                 completion(error)
             }
@@ -35,9 +33,10 @@ class NewsFeedModel{
     
     func convNew() {
         realmNews = RealmManager.shared.retrieveNewsArticles()
-        for item in realmNews {
-            news.append(self.newsArticleToNews(item))
-        }
+        news = realmNews.map({ article in
+            self.newsArticleToNews(article)
+        })
+        print(news.count)
     }
     
     func rSSFeedItemToNews(_ article: RSSFeedItem) -> News {

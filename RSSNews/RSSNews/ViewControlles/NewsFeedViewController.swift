@@ -10,6 +10,14 @@ import UIKit
 class NewsFeedViewController: UIViewController {
     var newsFeedModel = NewsFeedModel()
     
+    let myRefreshControl: UIRefreshControl = {
+       let refreshControl = UIRefreshControl()
+        let title = NSLocalizedString("Wait a second", comment: "Pull to refresh")
+        refreshControl.attributedTitle = NSAttributedString(string: title)
+        refreshControl.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
+        return refreshControl
+    }()
+    
     @IBOutlet private var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -24,6 +32,7 @@ class NewsFeedViewController: UIViewController {
     func configureTableView() {
         tableView.rowHeight = newsFeedModel.calculateRowHeight(from: tableView.frame.size.height)
         tableView.register(FeedItemCell.self, forCellReuseIdentifier: FeedItemCell.reuseIdentifier)
+        tableView.refreshControl = myRefreshControl
     }
     
     func loadNews() {
@@ -31,9 +40,7 @@ class NewsFeedViewController: UIViewController {
             if let error = error {
                 print("Failed to parse RSS feed: \(error)")
             }
-            print("hi")
             DispatchQueue.main.async {
-                print("hii")
                 self.tableView.reloadData()
             }
         }
@@ -44,6 +51,17 @@ class NewsFeedViewController: UIViewController {
         let detailVC = storyboard.instantiateViewController(withIdentifier: "FeedItemDetailViewController") as! FeedItemDetailViewController
         detailVC.feedItemDetailModel = FeedItemDetailModel(item: item)
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+    @objc func refresh(sender: UIRefreshControl) {
+        newsFeedModel.loadFeedItems() { error in
+            if let error = error {
+                print("Failed to parse RSS feed: \(error)")
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                sender.endRefreshing()
+            }
+        }
     }
 }
 
