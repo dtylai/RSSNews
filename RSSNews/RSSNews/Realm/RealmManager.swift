@@ -68,6 +68,22 @@ class RealmManager {
             print("Error deleting all articles: \(error)")
         }
     }
+    func findNewsArticle(withTitle title: String, andDate date: Date) -> NewsArticle? {
+        let predicate = NSPredicate(format: "title == %@ && date == %@", title, date as NSDate)
+        let articles = realm.objects(NewsArticle.self).filter(predicate)
+        return articles.first
+    }
+    
+    func markNewsArticleAsRead(withTitle title: String, andDate date: Date) {
+        guard let article = findNewsArticle(withTitle: title, andDate: date) else { return }
+        do {
+            try realm.write {
+                article.isRead = true
+            }
+        } catch let error as NSError {
+            print("Error marking article as read: \(error)")
+        }
+    }
 }
 
 

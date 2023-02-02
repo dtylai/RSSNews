@@ -87,6 +87,7 @@ class FeedItemCell: UITableViewCell {
     }
     
     func configure(with article: News) {
+        self.backgroundColor = .white
         titleLabel.text = article.title
         
         let date = article.date
@@ -103,6 +104,10 @@ class FeedItemCell: UITableViewCell {
         }
     
         articleImageView.image = article.image
+        
+        if article.isRead {
+            self.backgroundColor = .gray.withAlphaComponent(0.2)
+        }
     }
 }
 

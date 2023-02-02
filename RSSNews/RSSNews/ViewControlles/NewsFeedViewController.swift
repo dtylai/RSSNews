@@ -73,15 +73,18 @@ extension NewsFeedViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FeedItemCell.reuseIdentifier, for: indexPath) as! FeedItemCell
         let item = newsFeedModel.news[indexPath.row]
-        
+        cell.selectionStyle = .none
         cell.configure(with: item)
         
         return cell
     }
 }
+
 extension NewsFeedViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = newsFeedModel.news[indexPath.row]
+        RealmManager.shared.markNewsArticleAsRead(withTitle: item.title, andDate: item.date)
+        newsFeedModel.news[indexPath.row].isRead = true
         showDetailScreen(for: item)
     }
 }

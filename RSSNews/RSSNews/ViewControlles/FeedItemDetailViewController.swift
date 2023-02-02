@@ -81,7 +81,7 @@ class FeedItemDetailViewController: UIViewController {
         titleLabel.textColor = .black
         titleLabel.numberOfLines = 0
         
-        descriptionLabel.font = UIFont.systemFont(ofSize: 28)
+        descriptionLabel.font = UIFont.systemFont(ofSize: 24)
         descriptionLabel.textColor = .darkGray
         descriptionLabel.numberOfLines = 0
         
@@ -110,5 +110,6 @@ class FeedItemDetailViewController: UIViewController {
         } else {
             dateLabel.text = dateFormatter.string(from: date )
         }
+        
     }
 }
