@@ -6,6 +6,7 @@ Allows you to receive information about weather.
 ## Summary
 
   - [Getting Started](#getting-started)
+  - [About app](#about-app)
   - [Built With](#built-with)
   - [Authors](#authors)
   - [License](#license)
@@ -32,6 +33,11 @@ Then clone the repository there with the following command:
 
     https://github.com/dtylai/RSSNews.git
     
+    
+## About app
+
+sd
+
 ## Built With
 
 Using MVC design pattern.
