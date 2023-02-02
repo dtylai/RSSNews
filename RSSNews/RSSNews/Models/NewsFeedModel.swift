@@ -19,6 +19,7 @@ class NewsFeedModel{
             switch result {
             case .success(let feed):
                 self?.feedItems = feed.rssFeed?.items ?? []
+                RealmManager.shared.saveNewsArticle(feed.rssFeed?.items ?? [])
                 completion(nil)
             case .failure(let error):
                 completion(error)
