@@ -7,6 +7,7 @@ Allows you to receive information about weather.
 
   - [Getting Started](#getting-started)
   - [About app](#about-app)
+  - [Need to do](#need-to-do)
   - [Built With](#built-with)
   - [Authors](#authors)
   - [License](#license)
@@ -36,8 +37,14 @@ Then clone the repository there with the following command:
     
 ## About app
 
-sd
+The app downloads news from the rss feed. The application supports the ability to store data. The pull to refresh function is also available to download the latest news. The application first downloads news from the database, if there are any, then makes a request for new news and adds them to the already displayed news.The application also supports marking the read news - such news is displayed with a gray background color. By clicking on the news in the table, the user can go to the details of this news and read it in its entirety.
 
+## Need to do
+
+- [ ] Add Tests for buisness logic
+- [ ] Add supporting of dark mode
+- [ ] Add a selection of news resources
+- [ ] Improve UI
 ## Built With
 
 Using MVC design pattern.
